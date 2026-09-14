@@ -92,7 +92,7 @@ PostgreSQL (session storage)
 
 ## Gantt Chart
 
-gantt
+```gantt
     title TerrainX Project Timeline
     dateFormat  YYYY-MM-DD
     
@@ -116,12 +116,13 @@ gantt
     
     section Deployment
     System Demo & Final Review            :deploy1, after test2, 3d
+```
 
 ---
 
 ## Use Case Diagram
 
-@startuml
+```@startuml
 left to right direction
 actor "Physical Rover" as Rover
 actor "Operator/Viewer" as User
@@ -149,7 +150,7 @@ UC4 ..> UC5 : streams to
 UC5 ..> UC7 : broadcasts data to
 UC5 ..> UC6 : logs telemetry to
 UC8 ..> UC6 : retrieves data from
-@enduml
+@enduml```
 
 ---
 
@@ -157,14 +158,15 @@ UC8 ..> UC6 : retrieves data from
 
 ### Level 0
 
-flowchart TD
+```flowchart TD
     Env[Unknown Environment] -- Raw Spatial & Geometric Data --> System((TerrainX System))
     System -- Live Reconstructed Environment & Telemetry --> User[Unity Client / Operator]
     User -- Session Control & Replay Commands --> System
+```
 
 ### Level 1
 
-flowchart TD
+```flowchart TD
     Sensor[Sensing Layer: LiDAR & Cameras]
     Compute(Compute Layer: Jetson/Pi Preprocessing)
     Backend(Backend Layer: Django Relay)
@@ -178,6 +180,7 @@ flowchart TD
     Backend -- Telemetry & Session Data --> DB
     DB -- Time-Series Replay Data --> Backend
     Unity -- Rendered Point Clouds & Geometry --> User
+```
 
 ---
 
