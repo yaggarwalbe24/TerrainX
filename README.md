@@ -92,7 +92,8 @@ PostgreSQL (session storage)
 
 ## Gantt Chart
 
-```gantt
+```mermaid
+gantt
     title TerrainX Project Timeline
     dateFormat  YYYY-MM-DD
     
@@ -122,35 +123,36 @@ PostgreSQL (session storage)
 
 ## Use Case Diagram
 
-```@startuml
-left to right direction
-actor "Physical Rover" as Rover
-actor "Operator/Viewer" as User
+```mermaid
+flowchart LR
+    Rover(["Physical Rover"])
+    User(["Operator/Viewer"])
 
-package "TerrainX System" {
-  usecase "Explore Unknown Terrain" as UC1
-  usecase "Capture Spatial/Sensor Data" as UC2
-  usecase "Preprocess & Packetize Data" as UC3
-  usecase "Stream Telemetry (TCP/UDP)" as UC4
-  usecase "Relay Data to Clients" as UC5
-  usecase "Store Session in PostgreSQL" as UC6
-  usecase "Reconstruct Terrain Live (GPU)" as UC7
-  usecase "Replay Previous Traverses" as UC8
-}
+    subgraph TerrainX_System [TerrainX System]
+        direction TB
+        UC1(["Explore Unknown Terrain"])
+        UC2(["Capture Spatial/Sensor Data"])
+        UC3(["Preprocess & Packetize Data"])
+        UC4(["Stream Telemetry (TCP/UDP)"])
+        UC5(["Relay Data to Clients"])
+        UC6(["Store Session in PostgreSQL"])
+        UC7(["Reconstruct Terrain Live (GPU)"])
+        UC8(["Replay Previous Traverses"])
+    end
 
-Rover --> UC1
-Rover --> UC2
-Rover --> UC3
-Rover --> UC4
+    Rover --> UC1
+    Rover --> UC2
+    Rover --> UC3
+    Rover --> UC4
 
-User --> UC7
-User --> UC8
+    User --> UC7
+    User --> UC8
 
-UC4 ..> UC5 : streams to
-UC5 ..> UC7 : broadcasts data to
-UC5 ..> UC6 : logs telemetry to
-UC8 ..> UC6 : retrieves data from
-@enduml```
+    UC4 -. "streams to" .-> UC5
+    UC5 -. "broadcasts data to" .-> UC7
+    UC5 -. "logs telemetry to" .-> UC6
+    UC8 -. "retrieves data from" .-> UC6
+```
 
 ---
 
@@ -158,7 +160,8 @@ UC8 ..> UC6 : retrieves data from
 
 ### Level 0
 
-```flowchart TD
+```mermaid
+flowchart TD
     Env[Unknown Environment] -- Raw Spatial & Geometric Data --> System((TerrainX System))
     System -- Live Reconstructed Environment & Telemetry --> User[Unity Client / Operator]
     User -- Session Control & Replay Commands --> System
@@ -166,7 +169,8 @@ UC8 ..> UC6 : retrieves data from
 
 ### Level 1
 
-```flowchart TD
+```mermaid
+flowchart TD
     Sensor[Sensing Layer: LiDAR & Cameras]
     Compute(Compute Layer: Jetson/Pi Preprocessing)
     Backend(Backend Layer: Django Relay)
