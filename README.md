@@ -92,67 +92,13 @@ PostgreSQL (session storage)
 
 ## Gantt Chart
 
-```mermaid
-gantt
-    title TerrainX Project Timeline
-    dateFormat  YYYY-MM-DD
-    
-    section Requirements & Design
-    Define specs & evaluate sensors       :req1, 2026-09-15, 7d
-    Architecture & Pipeline Design        :req2, after req1, 7d
-    
-    section Development (Initial)
-    Hardware Setup (Rover + LiDAR)        :dev1, after req2, 10d
-    Compute Unit (Preprocessing)          :dev2, after req2, 10d
-    Django Backend Relay                  :dev3, after dev2, 10d
-    Unity Point Cloud Vis.                :dev4, after dev3, 12d
-    
-    section Development (Advanced)
-    Depth Reconstruction & Sensor Fusion  :adv1, after dev4, 14d
-    Replay & Multi-client interface       :adv2, after adv1, 14d
-    
-    section Testing
-    End-to-End Latency Tests              :test1, after dev4, 7d
-    Throughput & Packet Loss Eval         :test2, after adv2, 7d
-    
-    section Deployment
-    System Demo & Final Review            :deploy1, after test2, 3d
-```
+![Gantt Chart](Diagrams/gantt_chart.png)
 
 ---
 
 ## Use Case Diagram
 
-```mermaid
-flowchart LR
-    Rover(["Physical Rover"])
-    User(["Operator/Viewer"])
-
-    subgraph TerrainX_System [TerrainX System]
-        direction TB
-        UC1(["Explore Unknown Terrain"])
-        UC2(["Capture Spatial/Sensor Data"])
-        UC3(["Preprocess & Packetize Data"])
-        UC4(["Stream Telemetry (TCP/UDP)"])
-        UC5(["Relay Data to Clients"])
-        UC6(["Store Session in PostgreSQL"])
-        UC7(["Reconstruct Terrain Live (GPU)"])
-        UC8(["Replay Previous Traverses"])
-    end
-
-    Rover --> UC1
-    Rover --> UC2
-    Rover --> UC3
-    Rover --> UC4
-
-    User --> UC7
-    User --> UC8
-
-    UC4 -. "streams to" .-> UC5
-    UC5 -. "broadcasts data to" .-> UC7
-    UC5 -. "logs telemetry to" .-> UC6
-    UC8 -. "retrieves data from" .-> UC6
-```
+![Use Case Diagram](Diagrams/use_case.png)
 
 ---
 
@@ -160,31 +106,11 @@ flowchart LR
 
 ### Level 0
 
-```mermaid
-flowchart TD
-    Env[Unknown Environment] -- Raw Spatial & Geometric Data --> System((TerrainX System))
-    System -- Live Reconstructed Environment & Telemetry --> User[Unity Client / Operator]
-    User -- Session Control & Replay Commands --> System
-```
+![DFD0](Diagrams/DFD0.png)
 
 ### Level 1
 
-```mermaid
-flowchart TD
-    Sensor[Sensing Layer: LiDAR & Cameras]
-    Compute(Compute Layer: Jetson/Pi Preprocessing)
-    Backend(Backend Layer: Django Relay)
-    Unity(Reconstruction Layer: Unity Standalone)
-    DB[(PostgreSQL: Session Storage)]
-    User[Client Display]
-    
-    Sensor -- Distance & Angle Measurements --> Compute
-    Compute -- TCP/UDP Packetized Stream --> Backend
-    Backend -- Broadcast Data Stream --> Unity
-    Backend -- Telemetry & Session Data --> DB
-    DB -- Time-Series Replay Data --> Backend
-    Unity -- Rendered Point Clouds & Geometry --> User
-```
+![DFD1](Diagrams/DFD1.png)
 
 ---
 
